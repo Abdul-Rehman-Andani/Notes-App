@@ -28,7 +28,7 @@ const NotesTab = () => {
   if (isPending) {
     return (
       <SafeAreaView className="flex-1 justify-center items-center">
-        <ActivityIndicator size={"large"} />
+        <ActivityIndicator size="large" />
       </SafeAreaView>
     );
   }
@@ -51,45 +51,56 @@ const NotesTab = () => {
 
   return (
     <SafeAreaView className="flex-1 px-6">
-      {/* Header */}
-      <View className="flex flex-row justify-between items-center">
-        <TouchableOpacity
-          onPress={() => router.back()}
-          className="w-16 h-16 flex justify-center items-center rounded-full border-2 border-brand-yellow overflow-hidden"
-        >
-          <Image
-            source={require("@/assets/icons/back-arrow.png")}
-            className="size-8"
-          />
-        </TouchableOpacity>
-
-        <View className="w-16 h-16 flex justify-center items-center rounded-full border-2 border-brand-yellow overflow-hidden">
-          <Image
-            source={require("@/assets/icons/search.png")}
-            className="size-8"
-          />
-        </View>
-      </View>
-
-      <Text className="text-2xl mt-5 font-bold">Today's Notes</Text>
-
       <FlatList
-        showsVerticalScrollIndicator={false}
         data={notes}
-        contentContainerStyle={{ paddingBottom: 120 }}
         keyExtractor={(item) => item.$id}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 120 }}
+        ListHeaderComponent={
+          <>
+            {/* Header */}
+            <View className="flex flex-row justify-between items-center mt-2">
+              <TouchableOpacity
+                onPress={() => router.back()}
+                className="w-16 h-16 flex justify-center items-center rounded-full border-2 border-brand-yellow overflow-hidden"
+              >
+                <Image
+                  source={require("@/assets/icons/back-arrow.png")}
+                  className="size-8"
+                />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => router.push("/create-note")}
+                className="w-16 h-16 flex justify-center items-center rounded-full border-2 border-brand-yellow overflow-hidden"
+              >
+                <Image
+                  source={require("@/assets/icons/plus.png")}
+                  className="size-6"
+                />
+              </TouchableOpacity>
+            </View>
+
+            <Text className="text-2xl mt-6 font-bold mb-4">Today's Notes</Text>
+          </>
+        }
         renderItem={({ item }) => (
           <NoteCard note={item} onPress={() => setSelectedNote(item)} />
         )}
+        ListEmptyComponent={
+          <View className="mt-10 items-center">
+            <Text className="text-gray-500">No notes found</Text>
+          </View>
+        }
       />
 
-      {/* 🔥 Bottom Modal */}
+      {/*  Bottom Modal */}
       <Modal visible={!!selectedNote} animationType="slide" transparent>
         <Pressable
           className="flex-1 bg-black/40 justify-end"
           onPress={() => setSelectedNote(null)}
         >
-          <Pressable className="bg-white rounded-t-3xl p-6 min-h-[40%] flex justify-between">
+          <Pressable className="bg-white rounded-t-3xl p-6 min-h-[40%] justify-between">
             {selectedNote && (
               <>
                 <View className="mt-6">
@@ -107,19 +118,19 @@ const NotesTab = () => {
                 <TouchableOpacity
                   disabled={isUpdating}
                   onPress={() => {
-                    if (!selectedNote) return;
-
                     toggleStatus({
                       noteId: selectedNote.$id,
                       currentStatus: selectedNote.status,
                     });
 
-                    setSelectedNote(null); // close modal after update
+                    setSelectedNote(null);
                   }}
                   className="bg-brand-yellow py-3 rounded-lg"
                 >
                   <Text className="text-center font-bold text-lg">
-                    Mark as Done
+                    {selectedNote.status === "done"
+                      ? "Mark as Pending"
+                      : "Mark as Done"}
                   </Text>
                 </TouchableOpacity>
               </>

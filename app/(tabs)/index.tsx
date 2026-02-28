@@ -91,7 +91,7 @@ const HomeTab = () => {
 
             {/* Create Button */}
             <TouchableOpacity
-              onPress={() => router.push("/creare-note")}
+              onPress={() => router.push("/create-note")}
               className="w-20 h-20 flex justify-center items-center bg-white rounded-full absolute left-1/2 -translate-x-1/2 -bottom-10 shadow-lg"
             >
               <Image
